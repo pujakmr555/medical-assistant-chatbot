@@ -233,12 +233,13 @@ spacy>=3.4.0,<4.0.0
 
 # Install dependencies
 pip install -r requirements.txt
+
 python -m spacy download en_core_web_sm
 
 # Train the model
 python scripts/train.py --data data/mle_screening_dataset.csv --output models/medical_qa_model
 
-# Testing the Modelt
+# Testing the Model
 python quick_test.py
 
 **Technical Implementation Details**
