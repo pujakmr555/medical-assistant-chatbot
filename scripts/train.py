@@ -1,0 +1,95 @@
+import os
+os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+os.environ['OMP_NUM_THREADS'] = '1'
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning)
+import argparse
+import logging
+import sys
+from pathlib import Path
+import json
+
+# Add src to path
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from medical_chatbot.data_preprocessing import MedicalDataPreprocessor
+from medical_chatbot.model import MedicalQAModel
+from medical_chatbot.evaluation import MedicalQAEvaluator
+from config import DATASET_CONFIG, MODEL_CONFIG, TRAINING_CONFIG
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def main():
+    parser = argparse.ArgumentParser(description='Train Medical Assistant Chatbot')
+    parser.add_argument('--data', '-d',
+                       default=str(DATASET_CONFIG["data_path"]),
+                       help='Path to dataset CSV file')
+    parser.add_argument('--output', '-o',
+                       default=str(TRAINING_CONFIG["output_dir"]),
+                       help='Output directory for trained model')
+    parser.add_argument('--eval-only', action='store_true',
+                       help='Only run evaluation (skip training)')
+
+    args = parser.parse_args()
+
+    print("Medical Assistant Chatbot - Training Pipeline")
+    print("="*60)
+
+    # 1. Data Preprocessing
+    print("\nSTEP 1: DATA PREPROCESSING")
+    preprocessor = MedicalDataPreprocessor()
+
+    df = preprocessor.load_and_preprocess_data(args.data)
+
+    # Split data
+    train_df, val_df, test_df = preprocessor.prepare_training_data(df)
+
+    print("Data preparation complete:")
+    print(f"   Training: {len(train_df)} samples")
+    print(f"   Validation: {len(val_df)} samples")
+    print(f"   Test: {len(test_df)} samples")
+
+    if not args.eval_only:
+        # 2. Model Training
+        print("\nSTEP 2: MODEL TRAINING")
+        model = MedicalQAModel(MODEL_CONFIG["sentence_model"])
+        model.build_retrieval_system(train_df)
+
+        # Save model
+        model.save_model(args.output)
+        print(f"Model saved to: {args.output}")
+    else:
+        # Load existing model
+        model = MedicalQAModel()
+        model.load_model(args.output)
+
+    # 3. Evaluation
+    print("\nSTEP 3: MODEL EVALUATION")
+    evaluator = MedicalQAEvaluator(model)
+    results = evaluator.evaluate_comprehensive(test_df)
+
+    # Save evaluation results
+    eval_path = Path(args.output) / "evaluation_results.json"
+    with open(eval_path, 'w') as f:
+        json.dump(results, f, indent=2)
+
+    print(f"Evaluation complete. Results saved to: {eval_path}")
+
+    # 4. Demo
+    print("\nSTEP 4: DEMO")
+    demo_questions = [
+        "What is diabetes?",
+        "How to prevent high blood pressure?",
+        "What are the symptoms of heart disease?"
+    ]
+
+    for question in demo_questions:
+        result = model.answer_question(question)
+        print(f"\nQ: {question}")
+        print(f"A: {result['answer'][:150]}...")
+        print(f"Confidence: {result['confidence']:.3f}")
+
+if __name__ == "__main__":
+    main()

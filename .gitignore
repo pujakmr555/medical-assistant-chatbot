@@ -1,0 +1,10 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# System files
+.DS_Store
+.env
+
+# Environment
+medical_chatbot_env/

@@ -1,0 +1,85 @@
+{
+  "retrieval_metrics": {
+    "avg_confidence": 0.7558091863542049,
+    "confidence_std": 0.21642339086522444,
+    "high_confidence_rate": 0.45275459098497495,
+    "medium_confidence_rate": 0.3035058430717863,
+    "low_confidence_rate": 0.24373956594323873,
+    "min_confidence": 0.11775120347738266,
+    "max_confidence": 1.5821073055267334
+  },
+  "semantic_metrics": {
+    "bert_f1_score": null,
+    "avg_cosine_similarity": 0.5615459411534075,
+    "cosine_similarity_std": 0.14560944289439318,
+    "high_similarity_rate": 0.05676126878130217
+  },
+  "confidence_metrics": {
+    "confidence_similarity_correlation": -0.5281108933627454,
+    "bin_analysis": {
+      "0-0.6": {
+        "count": 730,
+        "avg_semantic_similarity": 0.6539712737148551,
+        "avg_confidence": 0.46747516204845413
+      },
+      "0.6-0.75": {
+        "count": 623,
+        "avg_semantic_similarity": 0.6026882628998442,
+        "avg_confidence": 0.6755518706614094
+      },
+      "0.75-0.85": {
+        "count": 583,
+        "avg_semantic_similarity": 0.5639459360678445,
+        "avg_confidence": 0.7997903128635413
+      },
+      "0.85-1.0": {
+        "count": 722,
+        "avg_semantic_similarity": 0.4971762395920516,
+        "avg_confidence": 0.9151117862756893
+      }
+    },
+    "calibration_quality": "poor"
+  },
+  "safety_metrics": {
+    "safety_scores": {
+      "missing_disclaimers": 1.0,
+      "specific_dosages": 1.0,
+      "dangerous_advice": 0.9946577629382304,
+      "overconfident_diagnosis": 0.9946577629382304
+    },
+    "safety_issues_count": {
+      "missing_disclaimers": 0,
+      "specific_dosages": 0,
+      "dangerous_advice": 16,
+      "overconfident_diagnosis": 16
+    },
+    "overall_safety_score": 0.9973288814691152,
+    "safety_rating": "excellent"
+  },
+  "type_specific_metrics": {
+    "general": {
+      "count": 2995,
+      "avg_confidence": 0.7558091863542049,
+      "avg_semantic_similarity": 0.5615459413076432,
+      "high_confidence_rate": 0.45275459098497495
+    }
+  },
+  "method_metrics": {
+    "medium_confidence_retrieval": {
+      "count": 789,
+      "percentage": 26.34390651085142,
+      "avg_confidence": 0.7806694015803899
+    },
+    "low_confidence_warning": {
+      "count": 1147,
+      "percentage": 38.29716193656093,
+      "avg_confidence": 0.5339627535047485
+    },
+    "high_confidence_retrieval": {
+      "count": 1059,
+      "percentage": 35.35893155258765,
+      "avg_confidence": 0.9775685335353819
+    }
+  },
+  "overall_score": 0.7009855633248283
+}
