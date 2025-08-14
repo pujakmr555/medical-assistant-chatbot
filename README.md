@@ -1,86 +1,119 @@
-Medical Q&A Chatbot
+**Medical Q&A Chatbot**
+
 A medical question-answering system built using retrieval-augmented generation to help answer healthcare-related questions safely and accurately.
 
-Project Overview
+**Project Overview**
+
 I developed this medical chatbot as part of exploring how AI can assist in healthcare information access. The system uses semantic search to find relevant medical information and provides answers with appropriate safety disclaimers.
 
-How It Works
+**How It Works**
+
 The chatbot combines two main approaches:
 
 Semantic Search: Uses sentence transformers to understand the meaning of questions
+
 Retrieved Responses: Finds the most similar questions in the medical database and returns corresponding answers
 
-My Approach
+**My Approach**
+
 I chose a retrieval-based approach because:
 
 Medical information needs to be accurate and evidence-based
+
 Generating new medical content could be risky
+
 Retrieving from a curated dataset ensures quality control
 
 The system uses BioBERT (medical domain BERT) to better understand medical terminology and concepts.
 
-Dataset and Preprocessing
+**Dataset and Preprocessing**
+
 I worked with the provided medical screening dataset which contained question-answer pairs about various health conditions.
 
-Data cleaning steps I implemented:
+**Data cleaning steps I implemented**:
 
 Removed duplicates and empty entries
+
 Standardized medical terminology
+
 Classified questions by type (symptoms, treatment, prevention, etc.)
+
 Created additional question variations to improve coverage
 
 Final dataset size: 9,584 medical Q&A pairs
 
-Model Architecture
+**Model Architecture**
+
 My implementation uses a hybrid approach:
 
-Embedding Generation: Convert questions and answers to vector representations using pritamdeka/S-PubMedBert-MS-MARCO
-FAISS Indexing: Build efficient search index for fast similarity matching
-Confidence-Based Responses: Use similarity scores to determine response confidence
-Safety Layer: Add medical disclaimers and handle low-confidence cases carefully
+**Embedding Generation**: Convert questions and answers to vector representations using pritamdeka/S-PubMedBert-MS-MARCO
 
-Response Strategy
+**FAISS Indexing**: Build efficient search index for fast similarity matching
+
+**Confidence-Based Responses**: Use similarity scores to determine response confidence
+
+**Safety Layer**: Add medical disclaimers and handle low-confidence cases carefully
+
+**Response Strategy**
+
 I implemented three confidence levels:
 
 High confidence (>0.85): Return answer directly with disclaimer
+
 Medium confidence (0.70-0.85): Return answer with stronger disclaimer
+
 Low confidence (<0.70): Provide cautious response and recommend consulting healthcare professionals
 
-Model Performance
+**Model Performance**
+
 Based on testing with the medical dataset, the system demonstrates:
-Strengths:
+
+**Strengths**:
 
 Good accuracy for common medical questions
+
 Proper safety disclaimers on all responses
+
 Fast response times (sub-second)
+
 Handles various question formats
+
 Effective question type classification
 
-Current limitations:
+**Current limitations**:
 
 Limited to information in training dataset
+
 Cannot provide personalized medical advice
+
 No real-time medical updates
+
 English language only
 
-Key Assumptions I Made
+**Key Assumptions**
 
-About the data:
+**About the data**:
 
 The medical information in the dataset is accurate and evidence-based
+
 Questions are general health-related queries, not emergency situations
+
 Users understand this is for educational purposes only
 
 About model behavior:
 
 Higher semantic similarity means more relevant/accurate answers
+
 Conservative responses are better than potentially harmful ones
+
 Medical disclaimers are essential for all health-related advice
 
-About usage:
+**About usage**:
 
 System will be used for health education, not diagnosis
+
 Users will seek professional help for serious medical concerns
+
 Emergency situations will be handled through proper medical channels
 
 Example Interactions
@@ -143,36 +176,49 @@ For more information about lifestyle changes and medicines, go to "How Is Diabet
 - Question Type: general
 
 
-Challenges I Faced
+**Challenges I Faced**
 
 Memory Issues on macOS: Had to implement smaller batch processing for model training
+
 Balancing Accuracy vs Safety: Ensuring responses are helpful but not overconfident
+
 Question Variety: Handling different ways people ask about the same medical topic
+
 Evaluation Complexity: Creating meaningful metrics for medical Q&A quality
 
-Future Improvements
-Short-term enhancements:
+**Future Improvements**
+
+**Short-term enhancements**:
 
 Add more medical datasets to expand knowledge base
+
 Implement better question understanding with improved preprocessing
+
 Support for multiple languages
+
 Enhanced confidence calibration
 
-Longer-term vision:
+**Longer-term vision**:
 
 Integration with real-time medical databases
+
 Multi-modal support (images, voice)
+
 Personalized responses based on user demographics
+
 Integration with telemedicine platforms
 
-Advanced features I'd like to explore:
+**Advanced features I'd like to explore**:
 
 Connection to electronic health records (with privacy safeguards)
+
 Collaboration with medical professionals for answer validation
+
 Machine learning from user feedback to improve responses
+
 Specialized modules for different medical specialties
 
-Technical Setup
+**Technical Setup**
 Requirements
 torch>=1.9.0
 transformers>=4.21.0,<5.0.0
@@ -183,7 +229,7 @@ numpy>=1.21.0,<1.26.0
 scikit-learn>=1.1.0,<1.4.0
 spacy>=3.4.0,<4.0.0
 
-Training the Model
+**Training the Model**
 
 # Install dependencies
 pip install -r requirements.txt
@@ -195,39 +241,52 @@ python scripts/train.py --data data/mle_screening_dataset.csv --output models/me
 # Testing the Modelt
 python quick_test.py
 
-Technical Implementation Details
+**Technical Implementation Details**
 
-Memory Optimization
+**Memory Optimization**
 
 Batch processing (size 8) for macOS compatibility
+
 Automatic index selection based on dataset size
+
 L2 normalization for cosine similarity computation
 
-Safety Features
+**Safety Features**
 
 Medical disclaimers on all responses
+
 Confidence-based response selection
+
 Question type classification (definition, symptoms, treatment, prevention, risk_factors)
+
 Conservative approach prioritizing user safety
 
-Preprocessing Features
+**Preprocessing Features**
 
 Medical terminology standardization
+
 Data augmentation with question variations
+
 Quality filtering and duplicate removal
+
 Automatic question type classification
 
-Safety and Limitations
+**Safety and Limitations**
 
 This chatbot is designed for educational purposes only. It:
 
  Cannot replace professional medical advice
+ 
  Should not be used for emergency situations
+ 
  Cannot provide personalized medical recommendations
+ 
  May not have information about rare conditions or latest treatments
 
 Always consult healthcare professionals for medical concerns.
 
-Reflection
+**Reflection**
+
 Building this medical chatbot taught me a lot about the challenges of AI in healthcare. The most important lesson was that accuracy isn't the only metric that matters - safety and appropriate caution are equally important. I'm proud of creating a system that prioritizes user safety while still providing helpful medical information.
+
 The project also highlighted the importance of domain-specific models and the value of retrieval-based approaches for sensitive applications where generating incorrect information could be harmful. Working with medical data required careful consideration of ethics, safety, and the responsibility that comes with providing health-related information.
